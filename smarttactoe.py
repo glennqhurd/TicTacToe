@@ -25,34 +25,20 @@ class smarttactoe:
     # has been stored already in the boardDict.  If the tempString does not match any boardDict keys, it adds a new key
     # mapped to the empty board spaces list tempBoard.  Then returns tempBoard.
     def _empty(self):
-        tempBoard = []
-        for i in range(len(self.board)):
-            if self.board[i] == ' ':
-                tempBoard.append(i)
-        tempString = ''.join(self.board)
+        tempBoard = boardutils.blankList(self.board)
+        tempString = boardutils.boardString(self.board)
         if not self.board in self.boardDict:
             self.boardDict[tempString] = 4 * tempBoard
-        return tempBoard
 
     # Writes to the file that stores the computer logic
     def saveMatchboxes(self):
         with open(self.FILENAME, 'w') as f:
             json.dump(self.boardDict, f)
 
-    # Determines which player moves next based on the empty spaces in the board
-    def toMove(self):
-        nextPlayerX = False
-        for square in self.board:
-            if square == ' ':
-                nextPlayerX = not nextPlayerX
-        if nextPlayerX:
-            return 'X'
-        else:
-            return 'O'
-
     # Generates the computer's move by checking blank spaces and selecting one at random
     def generateMove(self):
-        boardString = ''.join(self.board)
+        boardString = boardutils.boardString(self.board)
+        self._empty()
         moveList = self.boardDict[self.board]
         assert len(moveList) > 0
         if len(moveList) > 1:
@@ -66,54 +52,9 @@ class smarttactoe:
     def board(self):
         return self.board
 
-    # Checks if a space is empty, if so checks to see what mark to place.  Returns True if it places a mark at index
-    def move(self, nextMove):
-        if self.board[nextMove] == ' ':
-            boardList = list(self.board)
-            boardList[nextMove] = self.toMove()
-            self.board = ''.join(boardList)
-            return True
-        else:
-            return False
-
-    # Checks if the game has a winner, or if all spaces are filled w/o a winner then it's a tie
-    def winner(self):
-        winner = None
-        # check horizontal
-        if self._checkLine(0, 1, 2):
-            winner = self.board[0]
-        elif self._checkLine(3, 4, 5):
-            winner = self.board[3]
-        elif self._checkLine(6, 7, 8):
-            winner = self.board[6]
-        # check vertical
-        elif self._checkLine(0, 3, 6):
-            winner = self.board[0]
-        elif self._checkLine(1, 4, 7):
-            winner = self.board[1]
-        elif self._checkLine(2, 5, 8):
-            winner = self.board[2]
-        # check diagonal
-        elif self._checkLine(0, 4, 8):
-            winner = self.board[0]
-        elif self._checkLine(2, 4, 6):
-            winner = self.board[2]
-        elif not self._empty():
-            winner = 'Cat'
-        if winner and winner != 'Cat' and not self.matchBoxesAdjusted:
-            logging.debug('Before adjustment')
-            self.logMoves()
-            self.adjustMatchboxes(winner)
-            logging.debug('After adjustment')
-            self.logMoves()
-            self.matchBoxesAdjusted = True
-        if winner:
-            self.saveMatchboxes()
-        return winner
-
     # Adjust matchboxes so that move is more likely to happen in the future
     def adjustMatchboxes(self, winner):
-        if winner and self.toMove() == 'X':
+        if winner and boardutils.toMove(self.board) == 'X':
             for i in range(0, len(self.moves), 2):
                 movesTuple = self.moves[i]
                 boardInstance = movesTuple[0]
@@ -129,7 +70,7 @@ class smarttactoe:
                 else:
                     self.boardDict[boardInstance] = [movesInstance]
             print 'O wins!'
-        elif winner and self.toMove() == 'O':
+        elif winner and boardutils.toMove(self.board) == 'O':
             for i in range(0, len(self.moves), 2):
                 movesTuple = self.moves[i]
                 boardInstance = movesTuple[0]
@@ -149,7 +90,7 @@ class smarttactoe:
     # Resets the board to blank
     def resetBoard(self):
         self.moves = []
-        self.board = '         '
+        self.board = boardutils.emptyBoard()
         self.matchBoxesAdjusted = False
 
     # Private methods not expected to be called externally.
@@ -169,12 +110,12 @@ if __name__ == '__main__':
     catTally = 0
     for i in range(1):
         game = smarttactoe()
-        while not game.winner() and game.winner() != 'Cat':
+        while not boardutils.winner(game.board) and boardutils.winner(game.board) != 'Cat':
             nextMove = game.generateMove()
             logging.debug(nextMove)
-            game.move(nextMove)
+            game.board = boardutils.setMove(game.board, nextMove, boardutils.toMove(game.board))
             print boardutils.readableBoardString(game.board)
-        winnerString = game.winner()
+        winnerString = boardutils.winner(game.board)
         if winnerString == 'X':
             xTally += 1
         elif winnerString == 'O':
