@@ -2,6 +2,7 @@ import json
 import logging
 import random
 
+import roboplayer
 import boardutils
 
 __author__ = 'Lyman and Glenn Hurd'
@@ -13,13 +14,10 @@ class smarttactoe:
     FILENAME = 'move_dictionary.dat'
 
     def __init__(self):
+        self.robo = roboplayer.roboplayer()
         self.resetBoard()
         self.boardDict = {}
-        try:
-            with open(self.FILENAME, 'r') as f:
-                self.boardDict = json.load(f)
-        except IOError:
-            pass
+        self.robo.loadFromFile(self.FILENAME)
 
     # Function to append the indices of the empty spaces on the board into a list, then check to see if the board
     # has been stored already in the boardDict.  If the tempString does not match any boardDict keys, it adds a new key

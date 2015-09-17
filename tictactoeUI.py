@@ -120,6 +120,7 @@ class tictactoeUI:
                     return
             elif boardutils.toMove(self.game.board) == 'O':
                 if boardutils.isValidMove(self.game.board, box):
+                    self.game.board = boardutils.setMove(self.game.board, box, 'O')
                     self.drawO(box)
                     self.playerLabel.config(text='Player 1 turn (X)')
                 else:
