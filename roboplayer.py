@@ -17,11 +17,17 @@ class roboplayer:
         except IOError:
             pass
 
-    def saveToFile(self, filename, boardDict):
+    def saveToFile(self, filename):
         with open(filename, 'w') as f:
-            json.dump(boardDict, f)
+            json.dump(self.boardDict, f)
+
+    def _empty(self, boardString):
+        boardList = boardutils.blankList(boardString)
+        if not boardString in self.boardDict:
+            self.boardDict[boardString] = 4 * boardList
 
     def getMove(self, boardString):
+        self._empty(boardString)
         moveList = self.boardDict[boardString]
         assert len(moveList) > 0
         if len(moveList) > 1:

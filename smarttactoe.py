@@ -1,6 +1,5 @@
 import json
 import logging
-import random
 
 import roboplayer
 import boardutils
@@ -19,32 +18,10 @@ class smarttactoe:
         self.boardDict = {}
         self.robo.loadFromFile(self.FILENAME)
 
-    # Function to append the indices of the empty spaces on the board into a list, then check to see if the board
-    # has been stored already in the boardDict.  If the tempString does not match any boardDict keys, it adds a new key
-    # mapped to the empty board spaces list tempBoard.  Then returns tempBoard.
-    def _empty(self):
-        tempBoard = boardutils.blankList(self.board)
-        tempString = boardutils.boardString(self.board)
-        if not self.board in self.boardDict:
-            self.boardDict[tempString] = 4 * tempBoard
-
     # Writes to the file that stores the computer logic
     def saveMatchboxes(self):
         with open(self.FILENAME, 'w') as f:
             json.dump(self.boardDict, f)
-
-    # Generates the computer's move by checking blank spaces and selecting one at random
-    def generateMove(self):
-        boardString = boardutils.boardString(self.board)
-        self._empty()
-        moveList = self.boardDict[self.board]
-        assert len(moveList) > 0
-        if len(moveList) > 1:
-            randomIndex = random.randint(0, len(moveList) - 1)
-        else:
-            randomIndex = 0
-        self.moves.append((boardString, moveList[randomIndex]))
-        return moveList[randomIndex]
 
     # Returns the board object
     def board(self):
@@ -84,6 +61,7 @@ class smarttactoe:
                 if len(self.boardDict[boardInstance]) > 1:
                     self.boardDict[boardInstance].remove(movesInstance)
             print 'X wins!'
+        self.robo.saveToFile(self.FILENAME)
 
     # Resets the board to blank
     def resetBoard(self):
@@ -109,7 +87,7 @@ if __name__ == '__main__':
     for i in range(1):
         game = smarttactoe()
         while not boardutils.winner(game.board) and boardutils.winner(game.board) != 'Cat':
-            nextMove = game.generateMove()
+            nextMove = game.robo.getMove(game.board)
             logging.debug(nextMove)
             game.board = boardutils.setMove(game.board, nextMove, boardutils.toMove(game.board))
             print boardutils.readableBoardString(game.board)
