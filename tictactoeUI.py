@@ -105,27 +105,33 @@ class tictactoeUI:
         if box == None or self.inProgress != True:
             return
         else:
-            if self.game.toMove() == 'X':
-                if self.game.move(box):
+            if boardutils.toMove(self.game.board) == 'X':
+                if boardutils.isValidMove(self.game.board, box):
+                    self.game.board = boardutils.setMove(self.game.board, box, 'X')
                     self.drawX(box)
                     if self.radioVariable.get() == PLAYER_MODE:
                         self.playerLabel.config(text='Player 2 turn (O)')
-                    elif self.radioVariable.get() == COMPUTER_MODE and self.game.winner() == None:
+                    elif self.radioVariable.get() == COMPUTER_MODE and \
+                                    boardutils.winner(self.game.board) == None:
                         computerMove = self.game.generateMove()
-                        self.game.move(computerMove)
+                        self.game.board = boardutils.setMove(self.game.board, computerMove, 'O')
                         self.drawO(computerMove)
-            elif self.game.toMove() == 'O':
-                if self.game.move(box):
+                else:
+                    return
+            elif boardutils.toMove(self.game.board) == 'O':
+                if boardutils.isValidMove(self.game.board, box):
                     self.drawO(box)
                     self.playerLabel.config(text='Player 1 turn (X)')
+                else:
+                    return
 
-            if self.game.winner() == 'X':
+            if boardutils.winner(self.game.board) == 'X':
                 self.playerLabel.config(text='Player 1 wins!')
                 self.inProgress = False
-            elif self.game.winner() == 'O':
+            elif boardutils.winner(self.game.board) == 'O':
                 self.playerLabel.config(text='Player 2 wins!')
                 self.inProgress = False
-            elif self.game.winner() == 'Cat':
+            elif boardutils.winner(self.game.board) == 'Cat':
                 self.playerLabel.config(text='It\'s a tie!')
                 self.inProgress = False
 

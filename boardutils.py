@@ -56,6 +56,13 @@ def setMove(boardString, position, player):
     return ''.join(boardList)
 
 
+def isValidMove(boardString, position):
+    if boardString[position] == ' ':
+        return True
+    else:
+        return False
+
+
 def readableBoardString(boardString):
     """
     Print a board using ascii characters.
