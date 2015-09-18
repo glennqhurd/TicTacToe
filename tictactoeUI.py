@@ -12,6 +12,7 @@ COMPUTER_MODE = 2
 class tictactoeUI:
     def __init__(self):
         self.game = smarttactoe()
+        self.robo = roboplayer.roboplayer()
         self.inProgress = True
         self.playerMode = True
 
@@ -19,15 +20,13 @@ class tictactoeUI:
         self.BoardWindow = Tk()
         self.radioVariable = IntVar()
         self.radioVariable.set(1)
-        self.titleLabel = Label(self.BoardWindow, text='Tic-Tac-Toe Matchbox')
-        self.titleLabel.grid(row=0, column=0, columnspan=2)
+        Label(self.BoardWindow, text='Tic-Tac-Toe Matchbox').grid(row=0, column=0, columnspan=2)
         self.boardCanvas = Canvas(self.BoardWindow, width=300, height=300)
         self.boardCanvas.bind('<Button-1>', self.click)
         self.boardCanvas.grid(row=1, column=0, rowspan=4)
         self.playerLabel = Label(self.BoardWindow, text='Player 1 turn (X)')
         self.playerLabel.grid(row=5, column=0)
-        self.newGameButton = Button(self.BoardWindow, text='New Game', command=self.drawBoard)
-        self.newGameButton.grid(row=1, column=1)
+        Button(self.BoardWindow, text='New Game', command=self.drawBoard).grid(row=1, column=1)
         self.radioButtonPlayer = Radiobutton(self.BoardWindow, text="Versus Player", variable=self.radioVariable,
                                              value=PLAYER_MODE, command=lambda: self.setMode(self.radioButtonPlayer))
         self.radioButtonPlayer.grid(row=2, column=1, sticky='W')
@@ -50,55 +49,14 @@ class tictactoeUI:
         self.boardCanvas.create_line(200, 0, 200, 300)
 
     def drawX(self, box):
-        for i in range(9):
-            if box == 0:
-                self.boardCanvas.create_line(20, 20, 80, 80)
-                self.boardCanvas.create_line(20, 80, 80, 20)
-            elif box == 1:
-                self.boardCanvas.create_line(120, 20, 180, 80)
-                self.boardCanvas.create_line(120, 80, 180, 20)
-            elif box == 2:
-                self.boardCanvas.create_line(220, 20, 280, 80)
-                self.boardCanvas.create_line(220, 80, 280, 20)
-            elif box == 3:
-                self.boardCanvas.create_line(20, 120, 80, 180)
-                self.boardCanvas.create_line(20, 180, 80, 120)
-            elif box == 4:
-                self.boardCanvas.create_line(120, 120, 180, 180)
-                self.boardCanvas.create_line(120, 180, 180, 120)
-            elif box == 5:
-                self.boardCanvas.create_line(220, 120, 280, 180)
-                self.boardCanvas.create_line(220, 180, 280, 120)
-            elif box == 6:
-                self.boardCanvas.create_line(20, 220, 80, 280)
-                self.boardCanvas.create_line(20, 280, 80, 220)
-            elif box == 7:
-                self.boardCanvas.create_line(120, 220, 180, 280)
-                self.boardCanvas.create_line(120, 280, 180, 220)
-            elif box == 8:
-                self.boardCanvas.create_line(220, 220, 280, 280)
-                self.boardCanvas.create_line(220, 280, 280, 220)
+        self.boardCanvas.create_line(((box % 3) * 100 + 20), ((int(box / 3) * 100) + 20), ((box % 3) * 100 + 80),
+                                     ((int(box / 3) * 100) + 80))
+        self.boardCanvas.create_line(((box % 3) * 100 + 20), ((int(box / 3) * 100) + 80), ((box % 3) * 100 + 80),
+                                     ((int(box / 3) * 100) + 20))
 
     def drawO(self, box):
-        for i in range(9):
-            if box == 0:
-                self.boardCanvas.create_oval(10, 10, 90, 90)
-            if box == 1:
-                self.boardCanvas.create_oval(110, 10, 190, 90)
-            if box == 2:
-                self.boardCanvas.create_oval(210, 10, 290, 90)
-            if box == 3:
-                self.boardCanvas.create_oval(10, 110, 90, 190)
-            if box == 4:
-                self.boardCanvas.create_oval(110, 110, 190, 190)
-            if box == 5:
-                self.boardCanvas.create_oval(210, 110, 290, 190)
-            if box == 6:
-                self.boardCanvas.create_oval(10, 210, 90, 290)
-            if box == 7:
-                self.boardCanvas.create_oval(110, 210, 190, 290)
-            if box == 8:
-                self.boardCanvas.create_oval(210, 210, 290, 290)
+        self.boardCanvas.create_oval(((box % 3) * 100 + 10), ((int(box / 3) * 100) + 10), ((box % 3) * 100 + 90),
+                                     ((int(box / 3) * 100) + 90))
 
     def click(self, event):
         box = self.boxNumber(event.x, event.y)
@@ -113,7 +71,7 @@ class tictactoeUI:
                         self.playerLabel.config(text='Player 2 turn (O)')
                     elif self.radioVariable.get() == COMPUTER_MODE and \
                                     boardutils.winner(self.game.board) == None:
-                        computerMove = self.game.generateMove()
+                        computerMove = self.robo.getMove(self.game.board)
                         self.game.board = boardutils.setMove(self.game.board, computerMove, 'O')
                         self.drawO(computerMove)
                 else:
