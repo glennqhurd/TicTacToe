@@ -92,6 +92,7 @@ if __name__ == '__main__':
             game.board = boardutils.setMove(game.board, nextMove, boardutils.toMove(game.board))
             print boardutils.readableBoardString(game.board)
         winnerString = boardutils.winner(game.board)
+        game.adjustMatchboxes(winnerString)
         if winnerString == 'X':
             xTally += 1
         elif winnerString == 'O':
