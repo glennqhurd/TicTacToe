@@ -5,7 +5,6 @@ import boardutils
 
 __author__ = 'Glenn'
 
-
 class roboplayer:
     def __init__(self):
         self.boardDict = {}
