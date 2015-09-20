@@ -8,47 +8,37 @@ from tictactoe_symmetry import *
 class testRoboplayer(unittest.TestCase):
     def testApplySymmetries(self):
         boardString = ('XO       ')
-        identityString = applySymmetries(boardString, 0)
+        identityString = applySymmetry(boardString, 0)
         self.assertEqual(boardString, identityString)
-        rot90String = applySymmetries(boardString, 1)
-        testString = ('  X  O   ')
-        self.assertEqual(testString, rot90String)
-        rot180String = applySymmetries(boardString, 2)
-        testString = ('       OX')
-        self.assertEqual(testString, rot180String)
-        rot270String = applySymmetries(boardString, 3)
-        testString = ('   O  X  ')
-        self.assertEqual(testString, rot270String)
-        verticalString = applySymmetries(boardString, 4)
-        testString = (' OX      ')
-        self.assertEqual(testString, verticalString)
-        horizontalString = applySymmetries(boardString, 5)
-        testString = ('      XO ')
-        self.assertEqual(testString, horizontalString)
-        leftDiagonalString = applySymmetries(boardString, 6)
-        testString = ('     O  X')
-        self.assertEqual(testString, leftDiagonalString)
-        rightDiagonalString = applySymmetries(boardString, 7)
-        testString = ('X  O     ')
-        self.assertEqual(testString, rightDiagonalString)
+        rot90String = applySymmetry(boardString, 1)
+        self.assertEqual(('  X  O   '), rot90String)
+        rot180String = applySymmetry(boardString, 2)
+        self.assertEqual(('       OX'), rot180String)
+        rot270String = applySymmetry(boardString, 3)
+        self.assertEqual(('   O  X  '), rot270String)
+        verticalString = applySymmetry(boardString, 4)
+        self.assertEqual((' OX      '), verticalString)
+        horizontalString = applySymmetry(boardString, 5)
+        self.assertEqual(('      XO '), horizontalString)
+        leftDiagonalString = applySymmetry(boardString, 6)
+        self.assertEqual(('     O  X'), leftDiagonalString)
+        rightDiagonalString = applySymmetry(boardString, 7)
+        self.assertEqual(('X  O     '), rightDiagonalString)
 
     def testRotation(self):
         boardString = ('XO       ')
         identityString = identity(boardString)
         self.assertEqual(boardString, identityString)
         Rot90String = Rot90(boardString)
-        testString = ('  X  O   ')
-        self.assertEqual(testString, Rot90String)
+        self.assertEqual(('  X  O   '), Rot90String)
         Rot180String = Rot180(boardString)
-        testString = ('       OX')
-        self.assertEqual(testString, Rot180String)
+        self.assertEqual(('       OX'), Rot180String)
         Rot90String = Rot90(Rot90String)
-        self.assertEqual(testString, Rot90String)
+        self.assertEqual(('       OX'), Rot90String)
         Rot270String = Rot270(boardString)
-        testString = ('   O  X  ')
-        self.assertEqual(testString, Rot270String)
+        self.assertEqual(('   O  X  '), Rot270String)
         Rot90String = Rot90(Rot90String)
-        self.assertEqual(testString, Rot90String)
+        self.assertEqual(('   O  X  '), Rot90String)
 
     def testVerticalReflection(self):
         boardString = '         '
@@ -56,12 +46,10 @@ class testRoboplayer(unittest.TestCase):
         self.assertEqual(boardString, newString)
         boardString = 'X O X    '
         newString = flipVertical(boardString)
-        testString = 'O X X    '
-        self.assertEqual(testString, newString)
+        self.assertEqual('O X X    ', newString)
         boardString = 'X O O X O'
         newString = flipVertical(boardString)
-        testString = 'O X O O X'
-        self.assertEqual(testString, newString)
+        self.assertEqual('O X O O X', newString)
 
     def testHorizontalReflection(self):
         boardString = '         '
@@ -69,12 +57,10 @@ class testRoboplayer(unittest.TestCase):
         self.assertEqual(boardString, newString)
         boardString = 'X O X    '
         newString = flipHorizontal(boardString)
-        testString = '    X X O'
-        self.assertEqual(testString, newString)
+        self.assertEqual('    X X O', newString)
         boardString = 'X O O O X'
         newString = flipHorizontal(boardString)
-        testString = 'O X O X O'
-        self.assertEqual(testString, newString)
+        self.assertEqual('O X O X O', newString)
 
 
 if __name__ == '__main__':
