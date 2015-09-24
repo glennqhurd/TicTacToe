@@ -1,5 +1,6 @@
 import json
 import random
+import time
 
 import boardutils
 
@@ -26,6 +27,7 @@ class roboplayer:
             self.boardDict[boardString] = 4 * boardList
 
     def getMove(self, boardString):
+        time.sleep(2)
         self._empty(boardString)
         moveList = self.boardDict[boardString]
         assert len(moveList) > 0
