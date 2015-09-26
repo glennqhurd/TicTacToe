@@ -44,7 +44,7 @@ class tictactoeUI:
 
     def startGame(self):
         assert not self.inProgress
-        self.opponentThread.join()
+        self.endOpponentThread()
         self.game.resetBoard()
         self.inProgress = True
         self.playerLabel.config(text='Player 1 turn (X)')
@@ -65,6 +65,17 @@ class tictactoeUI:
             self.drawO(computerMove)
             self.playerLabel.config(text='Player 1 turn (X)')
             self.opponentMoveEvent.clear()
+
+    def endOpponentThread(self):
+        checkWinner = boardutils.winner(self.game.board)
+        if checkWinner == 'X':
+            self.playerLabel.config(text='Player 1 wins!')
+        elif checkWinner == 'O':
+            self.playerLabel.config(text='Player 2 wins!')
+        elif checkWinner == 'Cat':
+            self.playerLabel.config(text='It\'s a tie!')
+        self.inProgress = False
+        self.opponentThread.join()
 
     def drawX(self, box):
         self.boardCanvas.create_line(((box % 3) * 100 + 20), ((int(box / 3) * 100) + 20), ((box % 3) * 100 + 80),
@@ -101,16 +112,9 @@ class tictactoeUI:
                     checkWinner = boardutils.winner(self.game.board)
                 else:
                     return
+            if checkWinner:
+                self.endOpponentThread()
 
-            if checkWinner == 'X':
-                self.playerLabel.config(text='Player 1 wins!')
-                self.inProgress = False
-            elif checkWinner == 'O':
-                self.playerLabel.config(text='Player 2 wins!')
-                self.inProgress = False
-            elif checkWinner == 'Cat':
-                self.playerLabel.config(text='It\'s a tie!')
-                self.inProgress = False
 
     def boxNumber(self, x, y):
         # If clicked on a line returns None
