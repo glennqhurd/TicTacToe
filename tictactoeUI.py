@@ -43,8 +43,8 @@ class tictactoeUI:
         self.BoardWindow.mainloop()
 
     def startGame(self):
-        assert not self.inProgress
-        self.endOpponentThread()
+        if self.opponentThread:
+            self.endOpponentThread()
         self.game.resetBoard()
         self.inProgress = True
         self.playerLabel.config(text='Player 1 turn (X)')
@@ -75,6 +75,7 @@ class tictactoeUI:
         elif checkWinner == 'Cat':
             self.playerLabel.config(text='It\'s a tie!')
         self.inProgress = False
+        self.opponentMoveEvent.set()
         self.opponentThread.join()
 
     def drawX(self, box):
