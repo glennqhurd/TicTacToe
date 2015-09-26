@@ -57,8 +57,11 @@ class tictactoeUI:
         self.opponentThread.setDaemon(True)
         self.opponentThread.start()
 
+    def computerOpponent(self):
+        return self.radioVariable.get() == COMPUTER_MODE
+
     def opponentMove(self):
-        while self.inProgress:
+        while self.inProgress and self.computerOpponent():
             self.opponentMoveEvent.wait()
             computerMove = self.robo.getMove(self.game.board)
             self.game.board = boardutils.setMove(self.game.board, computerMove, 'O')
@@ -89,7 +92,7 @@ class tictactoeUI:
                                      ((int(box / 3) * 100) + 90))
 
     def click(self, event):
-        if self.radioVariable.get() == COMPUTER_MODE and self.opponentMoveEvent.is_set():
+        if self.computerOpponent() and self.opponentMoveEvent.is_set():
             return
         box = self.boxNumber(event.x, event.y)
         if box == None or self.inProgress != True:
@@ -101,7 +104,7 @@ class tictactoeUI:
                     self.drawX(box)
                     self.playerLabel.config(text='Player 2 turn (O)')
                     checkWinner = boardutils.winner(self.game.board)
-                    if self.radioVariable.get() == COMPUTER_MODE and checkWinner == None:
+                    if self.computerOpponent() and checkWinner == None:
                         self.opponentMoveEvent.set()
                 else:
                     return
