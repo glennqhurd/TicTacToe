@@ -1,3 +1,7 @@
+import itertools
+
+import boardutils
+
 __author__ = 'Glenn'
 
 IDENTITY_TUPLE = range(9)
@@ -21,8 +25,26 @@ def sortBoards(boardString):
     return sorted((applySymmetry(boardString, i) for i in range(len(SYMMETRY_TUPLE))))
 
 
-def canonicalBoard(boardString):
+def canonical_board(boardString):
     return sortBoards(boardString)[0]
+
+
+def is_canonical(x):
+    return x == canonical_board(x)
+
+
+def is_legal(x):
+    return is_canonical(x) and not boardutils.winner(x)
+
+
+def set_of_winning(board):
+    return len({''.join(b) for b in itertools.ifilter(lambda x: is_legal(''.join(x)),
+                                                      itertools.permutations(board))})
+
+
+def set_of_non_winning():
+    return len({''.join(b) for b in itertools.ifilterfalse(lambda x: is_legal(''.join(x)),
+                                                           itertools.permutations('XO       '))})
 
 
 if __name__ == '__main__':

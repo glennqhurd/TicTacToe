@@ -14,72 +14,91 @@ class tictactoeUI:
     def __init__(self):
         self.game = smarttactoe()
         self.robo = roboplayer.roboplayer()
-        self.playerMode = True
-        self.opponentThread = threading.Thread(name='opponentThread', target=self.opponentMove)
-        self.opponentMoveEvent = threading.Event()
         self.inProgress = False
-        self.opponentThread.setDaemon(True)
-        self.opponentThread.start()
+        self.opponentThread = None
+        self.opponentMoveEvent = threading.Event()
 
     def createWindow(self):
-        self.BoardWindow = Tk()
+        logging.debug('Entering createWindow')
+        board_window = Tk()
         self.radioVariable = IntVar()
         self.radioVariable.set(1)
-        Label(self.BoardWindow, text='Tic-Tac-Toe Matchbox').grid(row=0, column=0, columnspan=2)
-        self.boardCanvas = Canvas(self.BoardWindow, width=300, height=300)
+        Label(board_window, text='Tic-Tac-Toe Matchbox').grid(row=0, column=0, columnspan=2)
+        self.boardCanvas = Canvas(board_window, width=300, height=300)
         self.boardCanvas.bind('<Button-1>', self.click)
         self.boardCanvas.grid(row=1, column=0, rowspan=4)
-        self.playerLabel = Label(self.BoardWindow, text='Player 1 turn (X)')
+        self.playerLabel = Label(board_window, text='Player 1 turn (X)')
         self.playerLabel.grid(row=5, column=0)
-        Button(self.BoardWindow, text='New Game', command=self.startGame).grid(row=1, column=1)
-        self.radioButtonPlayer = Radiobutton(self.BoardWindow, text="Versus Player", variable=self.radioVariable,
-                                             value=PLAYER_MODE, command=lambda: self.setMode(self.radioButtonPlayer))
+        Button(board_window, text='New Game', command=self.startGame).grid(row=1, column=1)
+        self.radioButtonPlayer = Radiobutton(board_window, text="Versus Player", variable=self.radioVariable,
+                                             value=PLAYER_MODE, command=self.startGame)
         self.radioButtonPlayer.grid(row=2, column=1, sticky='W')
-        self.radioButtonComputer = Radiobutton(self.BoardWindow, text="Versus Computer", variable=self.radioVariable,
-                                               value=COMPUTER_MODE,
-                                               command=lambda: self.setMode(self.radioButtonComputer))
+        self.radioButtonComputer = Radiobutton(board_window, text="Versus Computer", variable=self.radioVariable,
+                                               value=COMPUTER_MODE, command=self.startGame)
         self.radioButtonComputer.grid(row=3, column=1)
         self.startGame()
-        self.BoardWindow.mainloop()
+        board_window.mainloop()
+        logging.debug('Leaving createWindow')
 
     def startGame(self):
-        if self.opponentThread:
-            self.endOpponentThread()
+        logging.debug('Entering startGame')
         self.game.resetBoard()
-        self.inProgress = True
+        self.inProgress = False  # Unfreeze the buttons until click is called.
+        self.radioButtonPlayer.config(state='active')
+        self.radioButtonComputer.config(state='active')
         self.playerLabel.config(text='Player 1 turn (X)')
         self.boardCanvas.delete("all")
         self.boardCanvas.create_line(0, 100, 300, 100)
         self.boardCanvas.create_line(0, 200, 300, 200)
         self.boardCanvas.create_line(100, 0, 100, 300)
         self.boardCanvas.create_line(200, 0, 200, 300)
-        self.opponentThread = threading.Thread(name='opponentThread', target=self.opponentMove)
-        self.opponentThread.setDaemon(True)
-        self.opponentThread.start()
+        if self.computerOpponent():
+            self.opponentThread = threading.Thread(name='opponentThread', target=self.opponentMove)
+            self.opponentThread.setDaemon(True)
+            self.opponentThread.start()
+        logging.debug('Leaving startGame')
+
 
     def computerOpponent(self):
         return self.radioVariable.get() == COMPUTER_MODE
 
     def opponentMove(self):
+        logging.debug('Entering opponentMove')
         while self.inProgress and self.computerOpponent():
             self.opponentMoveEvent.wait()
             computerMove = self.robo.getMove(self.game.board)
             self.game.board = boardutils.setMove(self.game.board, computerMove, 'O')
             self.drawO(computerMove)
-            self.playerLabel.config(text='Player 1 turn (X)')
             self.opponentMoveEvent.clear()
+            self.check_for_winner()
+        logging.debug('Leaving opponentMove')
 
-    def endOpponentThread(self):
+    def check_for_winner(self):
+        logging.debug('Entering check_for_winner')
         checkWinner = boardutils.winner(self.game.board)
+        if boardutils.toMove(self.game.board) == 'X':
+            self.playerLabel.config(text='Player 1 turn (X)')
+        elif boardutils.toMove(self.game.board) == 'O':
+            self.playerLabel.config(text='Player 2 turn (O)')
         if checkWinner == 'X':
             self.playerLabel.config(text='Player 1 wins!')
         elif checkWinner == 'O':
             self.playerLabel.config(text='Player 2 wins!')
         elif checkWinner == 'Cat':
             self.playerLabel.config(text='It\'s a tie!')
-        self.inProgress = False
+        if checkWinner:
+            self.inProgress = False
+            self.radioButtonPlayer.config(state='active')
+            self.radioButtonComputer.config(state='active')
+            if self.opponentThread:
+                self.endOpponentThread()
+        logging.debug('Leaving check_for_winner')
+
+    def endOpponentThread(self):
         self.opponentMoveEvent.set()
         self.opponentThread.join()
+        self.opponentThread = None
+        self.opponentMoveEvent = None
 
     def drawX(self, box):
         self.boardCanvas.create_line(((box % 3) * 100 + 20), ((int(box / 3) * 100) + 20), ((box % 3) * 100 + 80),
@@ -92,17 +111,20 @@ class tictactoeUI:
                                      ((int(box / 3) * 100) + 90))
 
     def click(self, event):
+        # Freeze the radio buttons when click occurs.
         if self.computerOpponent() and self.opponentMoveEvent.is_set():
             return
         box = self.boxNumber(event.x, event.y)
-        if box == None or self.inProgress != True:
+        if box == None:
             return
         else:
+            self.inProgress = True
+            self.radioButtonPlayer.config(state='disabled')
+            self.radioButtonComputer.config(state='disabled')
             if boardutils.toMove(self.game.board) == 'X':
                 if boardutils.isValidMove(self.game.board, box):
                     self.game.board = boardutils.setMove(self.game.board, box, 'X')
                     self.drawX(box)
-                    self.playerLabel.config(text='Player 2 turn (O)')
                     checkWinner = boardutils.winner(self.game.board)
                     if self.computerOpponent() and checkWinner == None:
                         self.opponentMoveEvent.set()
@@ -112,12 +134,9 @@ class tictactoeUI:
                 if boardutils.isValidMove(self.game.board, box):
                     self.game.board = boardutils.setMove(self.game.board, box, 'O')
                     self.drawO(box)
-                    self.playerLabel.config(text='Player 1 turn (X)')
-                    checkWinner = boardutils.winner(self.game.board)
                 else:
                     return
-            if checkWinner:
-                self.endOpponentThread()
+            self.check_for_winner()
 
 
     def boxNumber(self, x, y):
@@ -144,16 +163,8 @@ class tictactoeUI:
             elif y > 205 and y < 295:
                 return 8
 
-    def setMode(self, radio):
-        if self.radioVariable.get() == 1:
-            self.playerMode = True
-        elif self.radioVariable.get() == 2:
-            self.playerMode = False
-        else:
-            print 'error'
-
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     t = tictactoeUI()
     t.createWindow()
