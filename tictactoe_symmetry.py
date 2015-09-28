@@ -16,17 +16,17 @@ SYMMETRY_TUPLE = (IDENTITY_TUPLE, ROT90_TUPLE, ROT180_TUPLE, ROT270_TUPLE, VERTI
                   LEFT_DIAGONAL_TUPLE, RIGHT_DIAGONAL_TUPLE)
 IDENTITY, ROT90, ROT180, ROT270, VERTICAL, HORIZONTAL, LEFT_DIAGONAL, RIGHT_DIAGONAL = range(8)
 
-# Applies symmetry 0-7 to the boardString supplied
-def applySymmetry(boardString, symmetry):
+# Applies symmetry 0-7 to the board_string supplied
+def apply_symmetry(boardString, symmetry):
     return ''.join([boardString[SYMMETRY_TUPLE[symmetry][i]] for i in range(len(boardString))])
 
 
-def sortBoards(boardString):
-    return sorted((applySymmetry(boardString, i) for i in range(len(SYMMETRY_TUPLE))))
+def sort_boards(boardString):
+    return sorted((apply_symmetry(boardString, i) for i in range(len(SYMMETRY_TUPLE))))
 
 
 def canonical_board(boardString):
-    return sortBoards(boardString)[0]
+    return sort_boards(boardString)[0]
 
 
 def is_canonical(x):
@@ -37,15 +37,10 @@ def is_legal(x):
     return is_canonical(x) and not boardutils.winner(x)
 
 
-def set_of_winning(board):
+def canon_non_winning(board):
     return len({''.join(b) for b in itertools.ifilter(lambda x: is_legal(''.join(x)),
                                                       itertools.permutations(board))})
 
 
-def set_of_non_winning():
-    return len({''.join(b) for b in itertools.ifilterfalse(lambda x: is_legal(''.join(x)),
-                                                           itertools.permutations('XO       '))})
-
-
 if __name__ == '__main__':
-    print applySymmetry('X        ', RIGHT_DIAGONAL)
+    print apply_symmetry('X        ', RIGHT_DIAGONAL)

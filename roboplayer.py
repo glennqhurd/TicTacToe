@@ -21,7 +21,7 @@ class roboplayer:
             json.dump(self.boardDict, f)
 
     def _empty(self, boardString):
-        boardList = boardutils.blankList(boardString)
+        boardList = boardutils.blank_list(boardString)
         if not boardString in self.boardDict:
             self.boardDict[boardString] = 4 * boardList
 

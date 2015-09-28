@@ -5,12 +5,12 @@ WINNER_TUPLE = ((0, 1, 2), (0, 3, 6), (0, 4, 8), (1, 4, 7),
                 (3, 4, 5), (2, 5, 8), (6, 7, 8), (2, 4, 6))
 
 
-def blankList(boardString):
+def blank_list(boardString):
     """
     Given a board string return a list of the indices that are blank.
 
     Args:
-      boardString: String representing a board position.
+      board_string: String representing a board position.
 
     Returns:
       List of indices (ints).
@@ -24,7 +24,7 @@ def winner(boardString):
     Given a board string determine a winner.
 
     Args:
-      boardString: String representing a board position.
+      board_string: String representing a board position.
 
     Returns:
       'X', 'O' 'Cat' or None.
@@ -39,12 +39,12 @@ def winner(boardString):
     return 'Cat'
 
 
-def setMove(boardString, position, player):
+def set_move(boardString, position, player):
     """
     Return a new board string after making the indicated move.
 
     Args:
-      boardString: String representing a board position.
+      board_string: String representing a board position.
       position: int between (0-8).
       player: 'X' or 'O'
 
@@ -56,20 +56,20 @@ def setMove(boardString, position, player):
     return ''.join(boardList)
 
 
-def isValidMove(boardString, position):
+def is_valid_move(boardString, position):
     if boardString[position] == ' ':
         return True
     else:
         return False
 
 
-def readableBoardString(boardString):
+def readable_board_string(boardString):
     """
     Print a board using ascii characters.
     For testing: Returns a string
 
     Args:
-      boardString: String representing a board position.
+      board_string: String representing a board position.
 
     Returns:
       None
@@ -81,7 +81,7 @@ def readableBoardString(boardString):
             ' %s | %s | %s\n\n' % tuple(boardString))
 
 
-def emptyBoard():
+def empty_board():
     """
     Create a new board string(nine blanks).
 
@@ -91,12 +91,12 @@ def emptyBoard():
     return '         '
 
 
-def boardList(boardString):
+def board_list(boardString):
     """
     Represent a board string as a list.
 
     Args:
-      boardString: Board string.
+      board_string: Board string.
 
     Returns:
       List of moves (characters, 'X', "O', ' ').
@@ -104,12 +104,12 @@ def boardList(boardString):
     return list(boardString)
 
 
-def boardString(boardList):
+def board_string(boardList):
     """
     Represent a board list as a string.
 
     Args:
-      boardList: List of moves (characters, 'X', "O', ' ').
+      board_list: List of moves (characters, 'X', "O', ' ').
 
     Returns:
       Nine element string.
@@ -117,14 +117,14 @@ def boardString(boardList):
     return ''.join(boardList)
 
 
-def toMove(boardString):
+def to_move(boardString):
     """
     Determine whose move it is from a board string.  The answer will be 'X' if
     there are an off number of blanks and 'O' otherwise.
 
     Args:
-      boardString: Board string.
-  ('O', 'X')[boardString.count(' ')%2]
+      board_string: Board string.
+  ('O', 'X')[board_string.count(' ')%2]
     Returns:
       'X' (odd number of blanks) or 'O' (even number of blanks)
     """

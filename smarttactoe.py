@@ -14,7 +14,7 @@ class smarttactoe:
 
     def __init__(self):
         self.robo = roboplayer.roboplayer()
-        self.resetBoard()
+        self.reset_board()
         self.boardDict = {}
         self.robo.loadFromFile(self.FILENAME)
 
@@ -29,7 +29,7 @@ class smarttactoe:
 
     # Adjust matchboxes so that move is more likely to happen in the future
     def adjustMatchboxes(self, winner):
-        if winner and boardutils.toMove(self.board) == 'X':
+        if winner and boardutils.to_move(self.board) == 'X':
             for i in range(0, len(self.moves), 2):
                 movesTuple = self.moves[i]
                 boardInstance = movesTuple[0]
@@ -45,7 +45,7 @@ class smarttactoe:
                 else:
                     self.boardDict[boardInstance] = [movesInstance]
             print 'O wins!'
-        elif winner and boardutils.toMove(self.board) == 'O':
+        elif winner and boardutils.to_move(self.board) == 'O':
             for i in range(0, len(self.moves), 2):
                 movesTuple = self.moves[i]
                 boardInstance = movesTuple[0]
@@ -64,9 +64,9 @@ class smarttactoe:
         self.robo.saveToFile(self.FILENAME)
 
     # Resets the board to blank
-    def resetBoard(self):
+    def reset_board(self):
         self.moves = []
-        self.board = boardutils.emptyBoard()
+        self.board = boardutils.empty_board()
         self.matchBoxesAdjusted = False
 
     # Private methods not expected to be called externally.
@@ -89,8 +89,8 @@ if __name__ == '__main__':
         while not boardutils.winner(game.board) and boardutils.winner(game.board) != 'Cat':
             nextMove = game.robo.getMove(game.board)
             logging.debug(nextMove)
-            game.board = boardutils.setMove(game.board, nextMove, boardutils.toMove(game.board))
-            print boardutils.readableBoardString(game.board)
+            game.board = boardutils.set_move(game.board, nextMove, boardutils.to_move(game.board))
+            print boardutils.readable_board_string(game.board)
         winnerString = boardutils.winner(game.board)
         game.adjustMatchboxes(winnerString)
         if winnerString == 'X':

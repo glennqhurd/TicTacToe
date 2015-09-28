@@ -7,26 +7,26 @@ import boardutils
 
 class TestBoardUtils(unittest.TestCase):
     def testBlankList(self):
-        emptyList = boardutils.blankList('         ')
+        emptyList = boardutils.blank_list('         ')
         self.assertEqual(range(9), emptyList)
-        emptyList = boardutils.blankList('X O X O X')
+        emptyList = boardutils.blank_list('X O X O X')
         self.assertEqual([1, 3, 5, 7], emptyList)
 
     def testEmptyBoard(self):
-        boardString = boardutils.emptyBoard()
+        boardString = boardutils.empty_board()
         self.assertEqual(9, len(boardString))
         self.assertEqual(9, boardString.count(' '))
 
     def testBoardList(self):
-        testList = boardutils.boardList('         ')
+        testList = boardutils.board_list('         ')
         self.assertEqual([' '] * 9, testList)
-        testList = boardutils.boardList('X O X O X')
+        testList = boardutils.board_list('X O X O X')
         self.assertEqual(['X', ' ', 'O', ' ', 'X', ' ', 'O', ' ', 'X'], testList)
 
     def testBoardString(self):
-        testBoard = boardutils.boardString([' '] * 9)
+        testBoard = boardutils.board_string([' '] * 9)
         self.assertEqual('         ', testBoard)
-        testBoard = boardutils.boardString(['X', ' ', 'O', ' ', 'X', ' ', 'O', ' ', 'X'])
+        testBoard = boardutils.board_string(['X', ' ', 'O', ' ', 'X', ' ', 'O', ' ', 'X'])
         self.assertEqual('X O X O X', testBoard)
 
     def testWinner(self):
@@ -40,22 +40,22 @@ class TestBoardUtils(unittest.TestCase):
         self.assertEqual('Cat', testBoard)
 
     def testToMove(self):
-        nextMove = boardutils.toMove([' '] * 9)
+        nextMove = boardutils.to_move([' '] * 9)
         self.assertEqual('X', nextMove)
-        nextMove = boardutils.toMove(['X', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '])
+        nextMove = boardutils.to_move(['X', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '])
         self.assertEqual('O', nextMove)
 
     def testSetMove(self):
-        modifiedBoard = boardutils.setMove([' '] * 9, 0, 'X')
+        modifiedBoard = boardutils.set_move([' '] * 9, 0, 'X')
         expectedBoard = 'X        '
         self.assertEqual(expectedBoard, modifiedBoard)
-        modifiedBoard = boardutils.setMove(expectedBoard, 1, 'O')
+        modifiedBoard = boardutils.set_move(expectedBoard, 1, 'O')
         expectedBoard = 'XO       '
         self.assertEqual(expectedBoard, modifiedBoard)
 
     def testReadableBoardString(self):
         boardString = 'XO       '
-        readableString = boardutils.readableBoardString(boardString)
+        readableString = boardutils.readable_board_string(boardString)
         expectedString = (' %s | %s | %s\n'
                           '-----------\n'
                           ' %s | %s | %s\n'
