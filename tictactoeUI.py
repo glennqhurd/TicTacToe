@@ -15,6 +15,10 @@ class tictactoeUI:
         self.game = smarttactoe()
         self.robo = roboplayer.roboplayer()
         self.in_progress = False
+        self.opponent_thread = threading.Thread(name='opponent_thread', target=self.opponent_move)
+        self.opponent_thread.setDaemon(True)
+        self.opponent_move_event = threading.Event()
+        self.opponent_thread.start()
 
     def create_window(self):
         logging.debug('Entering create_window')
@@ -50,10 +54,6 @@ class tictactoeUI:
         self.board_canvas.create_line(0, 200, 300, 200)
         self.board_canvas.create_line(100, 0, 100, 300)
         self.board_canvas.create_line(200, 0, 200, 300)
-        if self.computer_opponent():
-            self.opponent_thread = threading.Thread(name='opponent_thread', target=self.opponent_move)
-            self.opponent_thread.setDaemon(True)
-            self.opponent_move_event = threading.Event()
         logging.debug('Leaving start_game')
 
     def computer_opponent(self):
@@ -61,13 +61,14 @@ class tictactoeUI:
 
     def opponent_move(self):
         logging.debug('Entering opponent_move')
-        while self.in_progress and self.computer_opponent():
-            self.opponent_move_event.wait()
-            computer_move = self.robo.getMove(self.game.board)
-            self.game.board = boardutils.set_move(self.game.board, computer_move, 'O')
-            self.drawO(computer_move)
-            self.opponent_move_event.clear()
-            self.check_for_winner()
+        while True:
+            if boardutils.to_move(self.game.board) == 'O':
+                self.opponent_move_event.wait()
+                computer_move = self.robo.getMove(self.game.board)
+                self.game.board = boardutils.set_move(self.game.board, computer_move, 'O')
+                self.drawO(computer_move)
+                self.opponent_move_event.clear()
+                self.check_for_winner()
         logging.debug('Leaving opponent_move')
 
     def check_for_winner(self):
@@ -87,13 +88,7 @@ class tictactoeUI:
             self.in_progress = False
             self.radiobutton_player.config(state='active')
             self.radiobutton_computer.config(state='active')
-            if self.computer_opponent() and self.opponent_thread:
-                self.end_opponent_thread()
         logging.debug('Leaving check_for_winner')
-
-    def end_opponent_thread(self):
-        self.opponent_move_event.set()
-        self.opponent_thread.join()
 
     def drawX(self, box):
         self.board_canvas.create_line(((box % 3) * 100 + 20), ((int(box / 3) * 100) + 20), ((box % 3) * 100 + 80),
@@ -118,8 +113,6 @@ class tictactoeUI:
                 self.in_progress = True
                 self.radiobutton_player.config(state='disabled')
                 self.radiobutton_computer.config(state='disabled')
-                if self.computer_opponent():
-                    self.opponent_thread.start()
             if boardutils.to_move(self.game.board) == 'X':
                 if boardutils.is_valid_move(self.game.board, box):
                     self.game.board = boardutils.set_move(self.game.board, box, 'X')
