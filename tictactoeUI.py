@@ -62,8 +62,10 @@ class tictactoeUI:
     def opponent_move(self):
         logging.debug('Entering opponent_move')
         while True:
+            logging.debug('Entering while loop')
+            self.opponent_move_event.wait()
             if boardutils.to_move(self.game.board) == 'O':
-                self.opponent_move_event.wait()
+                logging.debug('Entering if statement')
                 computer_move = self.robo.getMove(self.game.board)
                 self.game.board = boardutils.set_move(self.game.board, computer_move, 'O')
                 self.drawO(computer_move)
