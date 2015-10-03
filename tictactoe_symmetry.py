@@ -21,12 +21,15 @@ def apply_symmetry(boardString, symmetry):
     return ''.join([boardString[SYMMETRY_TUPLE[symmetry][i]] for i in range(len(boardString))])
 
 
-def sort_boards(boardString):
-    return sorted((apply_symmetry(boardString, i) for i in range(len(SYMMETRY_TUPLE))))
+def symmetric_boards(boardString):
+    return [(apply_symmetry(boardString, i) for i in range(len(SYMMETRY_TUPLE)))]
 
 
 def canonical_board(boardString):
-    return sort_boards(boardString)[0]
+    symmetric = symmetric_boards(boardString)
+    canonical = sorted(symmetric_boards(boardString))
+    board_index = symmetric.index(canonical)
+    return (canonical, board_index)
 
 
 def is_canonical(x):
@@ -43,4 +46,5 @@ def canon_non_winning(board):
 
 
 if __name__ == '__main__':
-    print apply_symmetry('X        ', RIGHT_DIAGONAL)
+    print apply_symmetry('XOXOX    ', ROT90)
+    print apply_symmetry(apply_symmetry('XOXOX    ', ROT90), ROT270)
