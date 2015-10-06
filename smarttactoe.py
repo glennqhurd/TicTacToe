@@ -16,7 +16,7 @@ class smarttactoe:
         self.robo = roboplayer.roboplayer()
         self.reset_board()
         self.boardDict = {}
-        self.robo.loadFromFile(self.FILENAME)
+        self.robo.load_from_file(self.FILENAME)
 
     # Writes to the file that stores the computer logic
     def saveMatchboxes(self):
@@ -61,7 +61,7 @@ class smarttactoe:
                 if len(self.boardDict[boardInstance]) > 1:
                     self.boardDict[boardInstance].remove(movesInstance)
             print 'X wins!'
-        self.robo.saveToFile(self.FILENAME)
+        self.robo.save_to_file(self.FILENAME)
 
     # Resets the board to blank
     def reset_board(self):
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     for i in range(1):
         game = smarttactoe()
         while not boardutils.winner(game.board) and boardutils.winner(game.board) != 'Cat':
-            nextMove = game.robo.getMove(game.board)
+            nextMove = game.robo.get_move(game.board)
             logging.debug(nextMove)
             game.board = boardutils.set_move(game.board, nextMove, boardutils.to_move(game.board))
             print boardutils.readable_board_string(game.board)
