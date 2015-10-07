@@ -22,13 +22,14 @@ class testRoboplayer(unittest.TestCase):
         move_list = [(canonical_board('         '), 0), (canonical_board('X        '), 3),
                      (canonical_board('X O      '), 2), (canonical_board('X XO     '), 4),
                      (canonical_board('X XOO    '), 6), (canonical_board('X XOO X  '), 5)]
-        board = canonical_board('X XOOOX  ')
+        board, symmetry = canonical_board('X XOOOX  ')
         new_board_dict = robo.adjust(move_list, board, board_dict)
-        test_dict = {canonical_board('         '): [1], canonical_board('X        '): [2, 3],
-                     canonical_board('X  O     '): [4], canonical_board('X XO     '): [4, 5],
-                     canonical_board('X XOO    '): [1], canonical_board('X XOO X  '): [5, 7]}
+        test_dict = {canonical_board('         ')[0]: [1], canonical_board('X        ')[0]: [2, 3],
+                     canonical_board('X  O     ')[0]: [4], canonical_board('X XO     ')[0]: [4, 5],
+                     canonical_board('X XOO    ')[0]: [1], canonical_board('X XOO X  ')[0]: [5, 7]}
         self.assertEqual(test_dict['         '], new_board_dict['         '])
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     unittest.main()

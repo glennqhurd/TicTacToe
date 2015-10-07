@@ -1,4 +1,5 @@
 import itertools
+import logging
 
 import boardutils
 
@@ -19,8 +20,9 @@ INVERSE_TUPLE = (IDENTITY_TUPLE, ROT270_TUPLE, ROT180_TUPLE, ROT90_TUPLE, VERTIC
 IDENTITY, ROT90, ROT180, ROT270, VERTICAL, HORIZONTAL, LEFT_DIAGONAL, RIGHT_DIAGONAL = range(8)
 
 # Applies symmetry 0-7 to the board_string supplied
-def apply_symmetry(boardString, symmetry):
-    return ''.join([boardString[SYMMETRY_TUPLE[symmetry][i]] for i in range(len(boardString))])
+def apply_symmetry(board_string, symmetry):
+    logging.debug(board_string)
+    return ''.join([board_string[SYMMETRY_TUPLE[symmetry][i]] for i in range(len(board_string))])
 
 
 def symmetric_boards(boardString):
@@ -48,5 +50,6 @@ def canon_non_winning(board):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     print apply_symmetry('XOXOX    ', ROT90)
     print apply_symmetry(apply_symmetry('XOXOX    ', ROT90), ROT270)

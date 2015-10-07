@@ -29,6 +29,7 @@ def winner(boardString):
     Returns:
       'X', 'O' 'Cat' or None.
     """
+    assert len(boardString) == 9
     for tuple in WINNER_TUPLE:
         if boardString[tuple[0]] == boardString[tuple[1]] and boardString[tuple[1]] == boardString[tuple[2]]:
             if boardString[tuple[0]] != ' ':
