@@ -4,7 +4,7 @@ from tictactoe_symmetry import *
 
 __author__ = 'Glenn'
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 class roboplayer:
     def __init__(self):
         self.boardDict = {}
@@ -38,6 +38,7 @@ class roboplayer:
 
     def adjust(self, moveList, board, boardDict):
         winner = boardutils.winner(board)
+        logging.info(winner)
         if winner == 'O':
             for i in range(1, len(moveList), 2):
                 movesTuple = moveList[i]
@@ -53,9 +54,13 @@ class roboplayer:
         elif winner == 'X':
             for i in range(1, len(moveList), 2):
                 movesTuple = moveList[i]
-                boardInstance = movesTuple[0]
-                if len(boardDict[boardInstance]) > 1:
-                    boardDict[boardInstance].remove(movesTuple[1])
+                logging.debug(movesTuple)
+                boardInstance = canonical_board(movesTuple[0][0])
+                canonBoard = canonical_board(board)
+                if boardInstance[0] != canonBoard[0]:
+                    logging.debug(boardInstance)
+                    logging.debug(movesTuple[1])
+                    boardDict[boardInstance[0]].remove(movesTuple[1])
                 else:
-                    boardDict[boardInstance] = [movesTuple[1]]
+                    boardDict[boardInstance[0]] = [movesTuple[1]]
         return boardDict
