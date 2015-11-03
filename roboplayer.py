@@ -1,4 +1,5 @@
 import json
+import random
 
 from tictactoe_symmetry import *
 
@@ -20,20 +21,22 @@ class roboplayer:
         with open(filename, 'w') as f:
             json.dump(self.boardDict, f)
 
-    def _empty(self, boardString):
-        boardList = boardutils.blank_list(boardString)
-        if not boardString in self.boardDict:
-            self.boardDict[boardString] = 4 * boardList
+    def _empty(self, canon_board):
+        # canon_board = canonical_board(board_string[0])
+        board_list = boardutils.blank_list(canon_board[0])
+        if not canon_board in self.boardDict:
+            self.boardDict[canon_board[0]] = 4 * board_list
 
-    def get_move(self, boardString):
+    def get_move(self, board_string):
         # time.sleep(2)
-        self._empty(boardString)
-        moveList = self.boardDict[boardString]
+        canon_board = canonical_board(board_string)
+        self._empty(canon_board)
+        moveList = self.boardDict[canon_board[0]]
         assert len(moveList) > 0
-        # if len(moveList) > 1:
-        #     randomIndex = random.randint(0, len(moveList) - 1)
-        # else:
-        randomIndex = 0
+        if len(moveList) > 1:
+            randomIndex = random.randint(0, len(moveList) - 1)
+        else:
+            randomIndex = 0
         return moveList[randomIndex]
 
     def adjust(self, moveList, board, boardDict):
