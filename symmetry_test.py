@@ -25,6 +25,10 @@ class testSymmetry(unittest.TestCase):
         self.assertEqual(('        X', 2), canonical_board('X        '))
         self.assertEqual(('       OX', 2), canonical_board('XO       '))
 
+    def test_get_symm_index(self):
+        self.assertEqual(0, get_symm_index(0, 0))
+        self.assertEqual(6, get_symm_index(0, 1))
+        self.assertEqual(7, get_symm_index(1, 2))
 
 if __name__ == '__main__':
     unittest.main()

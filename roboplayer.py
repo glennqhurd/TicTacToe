@@ -21,23 +21,29 @@ class roboplayer:
         with open(filename, 'w') as f:
             json.dump(self.boardDict, f)
 
-    def _empty(self, canon_board):
-        # canon_board = canonical_board(board_string[0])
+    def _empty(self, board_string):
+        canon_board = canonical_board(board_string)
         board_list = boardutils.blank_list(canon_board[0])
         if not canon_board in self.boardDict:
             self.boardDict[canon_board[0]] = 4 * board_list
 
     def get_move(self, board_string):
         # time.sleep(2)
+        self._empty(board_string)
         canon_board = canonical_board(board_string)
-        self._empty(canon_board)
         moveList = self.boardDict[canon_board[0]]
         assert len(moveList) > 0
         if len(moveList) > 1:
             randomIndex = random.randint(0, len(moveList) - 1)
         else:
             randomIndex = 0
-        return moveList[randomIndex]
+        if canon_board[1] == 1:
+            symm_move = get_symm_index(moveList[randomIndex], 3)
+        elif canon_board[1] == 3:
+            symm_move = get_symm_index(moveList[randomIndex], 1)
+        else:
+            symm_move = get_symm_index(moveList[randomIndex], canon_board[1])
+        return symm_move
 
     def adjust(self, moveList, board, boardDict):
         winner = boardutils.winner(board)

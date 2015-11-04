@@ -49,6 +49,10 @@ def canon_non_winning(board):
                                                       itertools.permutations(board))})
 
 
+def get_symm_index(index, symmetry):
+    return SYMMETRY_TUPLE[symmetry][index]
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     print apply_symmetry('XOXOX    ', ROT90)

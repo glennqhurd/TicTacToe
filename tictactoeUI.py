@@ -99,6 +99,7 @@ class tictactoeUI:
                                      ((int(box / 3) * 100) + 20))
 
     def drawO(self, box):
+        logging.info(box)
         self.board_canvas.create_oval(((box % 3) * 100 + 10), ((int(box / 3) * 100) + 10), ((box % 3) * 100 + 90),
                                      ((int(box / 3) * 100) + 90))
 
