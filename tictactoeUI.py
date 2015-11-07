@@ -15,6 +15,7 @@ class tictactoeUI:
         self.game = smarttactoe()
         self.robo = roboplayer.roboplayer()
         self.in_progress = False
+        self.X_turn = False
         self.opponent_thread = threading.Thread(name='opponent_thread', target=self.opponent_move)
         self.opponent_thread.setDaemon(True)
         self.opponent_move_event = threading.Event()
@@ -46,6 +47,7 @@ class tictactoeUI:
         logging.debug('Entering start_game')
         self.game.reset_board()
         self.in_progress = False  # Unfreeze the buttons until click is called.
+        self.X_turn = True
         self.radiobutton_player.config(state='active')
         self.radiobutton_computer.config(state='active')
         self.player_label.config(text='Player 1 turn (X)')
@@ -70,6 +72,7 @@ class tictactoeUI:
                 self.game.board = boardutils.set_move(self.game.board, computer_move, 'O')
                 self.drawO(computer_move)
                 self.opponent_move_event.clear()
+                self.X_turn = True
                 self.check_for_winner()
         logging.debug('Leaving opponent_move')
 
@@ -88,6 +91,7 @@ class tictactoeUI:
             self.player_label.config(text='It\'s a tie!')
         if check_winner:
             self.in_progress = False
+            self.X_turn = False
             self.radiobutton_player.config(state='active')
             self.radiobutton_computer.config(state='active')
         logging.debug('Leaving check_for_winner')
@@ -109,15 +113,18 @@ class tictactoeUI:
         if self.computer_opponent() and self.opponent_move_event.is_set():
             return
         box = self.box_number(event.x, event.y)
-        if box == None:
+        if self.X_turn == False or box == None:
             return
         else:
+            logging.info('Entering click else statement')
             if self.in_progress == False:
                 self.in_progress = True
                 self.radiobutton_player.config(state='disabled')
                 self.radiobutton_computer.config(state='disabled')
             if boardutils.to_move(self.game.board) == 'X':
                 if boardutils.is_valid_move(self.game.board, box):
+                    if self.computer_opponent():
+                        self.game.add_move(self.game.board, box)
                     self.game.board = boardutils.set_move(self.game.board, box, 'X')
                     self.drawX(box)
                     check_winner = boardutils.winner(self.game.board)
@@ -127,6 +134,8 @@ class tictactoeUI:
                     return
             elif boardutils.to_move(self.game.board) == 'O':
                 if boardutils.is_valid_move(self.game.board, box):
+                    logging.info(self.game.board)
+                    logging.info(box)
                     self.game.board = boardutils.set_move(self.game.board, box, 'O')
                     self.drawO(box)
                 else:

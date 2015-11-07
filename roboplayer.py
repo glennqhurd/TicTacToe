@@ -9,6 +9,7 @@ logging.basicConfig(level=logging.INFO)
 class roboplayer:
     def __init__(self):
         self.boardDict = {}
+        self.load_from_file('move_dict.dat')
 
     def load_from_file(self, filename):
         try:
@@ -37,12 +38,11 @@ class roboplayer:
             randomIndex = random.randint(0, len(moveList) - 1)
         else:
             randomIndex = 0
-        if canon_board[1] == 1:
-            symm_move = get_symm_index(moveList[randomIndex], 3)
-        elif canon_board[1] == 3:
-            symm_move = get_symm_index(moveList[randomIndex], 1)
-        else:
-            symm_move = get_symm_index(moveList[randomIndex], canon_board[1])
+        logging.debug('Canonical_board[0]:\n %s', boardutils.readable_board_string(canon_board[0]))
+        logging.debug('random index of moveList is: %d', moveList[randomIndex])
+        logging.debug('Symmetry used = %d', canon_board[1])
+        symm_move = get_symm_index(moveList[randomIndex], canon_board[1])
+        logging.debug('Symmetry move is: %d', symm_move)
         return symm_move
 
     def adjust(self, moveList, board, boardDict):
@@ -72,4 +72,5 @@ class roboplayer:
                     boardDict[boardInstance[0]].remove(movesTuple[1])
                 else:
                     boardDict[boardInstance[0]] = [movesTuple[1]]
+        self.save_to_file('move_dict.dat')
         return boardDict

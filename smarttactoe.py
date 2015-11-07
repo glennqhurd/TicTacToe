@@ -27,19 +27,22 @@ class smarttactoe:
     def board(self):
         return self.board
 
+    def add_move(self, board, input_move):
+        self.moves[board] = input_move
+
     # Adjust matchboxes so that move is more likely to happen in the future
     def adjustMatchboxes(self, winner):
         if winner and boardutils.to_move(self.board) == 'X':
             for i in range(0, len(self.moves), 2):
-                movesTuple = self.moves[i]
-                boardInstance = movesTuple[0]
-                movesInstance = movesTuple[1]
+                moves_tuple = self.moves[i]
+                boardInstance = moves_tuple[0]
+                movesInstance = moves_tuple[1]
                 if len(self.boardDict[boardInstance]) > 1:
                     self.boardDict[boardInstance].remove(movesInstance)
             for i in range(1, len(self.moves), 2):
-                movesTuple = self.moves[i]
-                boardInstance = movesTuple[0]
-                movesInstance = movesTuple[1]
+                moves_tuple = self.moves[i]
+                boardInstance = moves_tuple[0]
+                movesInstance = moves_tuple[1]
                 if boardInstance != self.board:
                     self.boardDict[boardInstance].append(movesInstance)
                 else:
@@ -47,25 +50,26 @@ class smarttactoe:
             print 'O wins!'
         elif winner and boardutils.to_move(self.board) == 'O':
             for i in range(0, len(self.moves), 2):
-                movesTuple = self.moves[i]
-                boardInstance = movesTuple[0]
-                movesInstance = movesTuple[1]
+                moves_tuple = self.moves[i]
+                boardInstance = moves_tuple[0]
+                movesInstance = moves_tuple[1]
                 if boardInstance != self.board:
                     self.boardDict[boardInstance].append(movesInstance)
                 else:
                     self.boardDict[boardInstance] = [movesInstance]
             for i in range(1, len(self.moves), 2):
-                movesTuple = self.moves[i]
-                boardInstance = movesTuple[0]
-                movesInstance = movesTuple[1]
+                moves_tuple = self.moves[i]
+                boardInstance = moves_tuple[0]
+                movesInstance = moves_tuple[1]
                 if len(self.boardDict[boardInstance]) > 1:
                     self.boardDict[boardInstance].remove(movesInstance)
             print 'X wins!'
-        self.robo.save_to_file(self.FILENAME)
+        if winner:
+            self.robo.adjust(self.moves, self.board, self.robo.boardDict)
 
     # Resets the board to blank
     def reset_board(self):
-        self.moves = []
+        self.moves = {}
         self.board = boardutils.empty_board()
         self.matchBoxesAdjusted = False
 
