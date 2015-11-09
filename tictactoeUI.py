@@ -90,6 +90,7 @@ class tictactoeUI:
         elif check_winner == 'Cat':
             self.player_label.config(text='It\'s a tie!')
         if check_winner:
+            self.robo.adjust(self.game.board)
             self.in_progress = False
             self.X_turn = False
             self.radiobutton_player.config(state='active')

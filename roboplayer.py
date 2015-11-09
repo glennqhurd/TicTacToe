@@ -10,6 +10,7 @@ class roboplayer:
     def __init__(self):
         self.boardDict = {}
         self.load_from_file('move_dict.dat')
+        self.move_record = []
 
     def load_from_file(self, filename):
         try:
@@ -42,35 +43,36 @@ class roboplayer:
         logging.debug('random index of moveList is: %d', moveList[randomIndex])
         logging.debug('Symmetry used = %d', canon_board[1])
         symm_move = get_symm_index(moveList[randomIndex], canon_board[1])
+        self.move_record.append((canon_board[0], moveList[randomIndex]))
         logging.debug('Symmetry move is: %d', symm_move)
         return symm_move
 
-    def adjust(self, moveList, board, boardDict):
+    def adjust(self, board):
         winner = boardutils.winner(board)
         logging.info(winner)
         if winner == 'O':
-            for i in range(1, len(moveList), 2):
-                movesTuple = moveList[i]
+            for i in range(0, len(self.move_record)):
+                movesTuple = self.move_record[i]
                 logging.debug(movesTuple)
-                boardInstance = canonical_board(movesTuple[0][0])
+                boardInstance = canonical_board(movesTuple[0])
                 canonBoard = canonical_board(board)
                 if boardInstance[0] != canonBoard[0]:
                     logging.debug(boardInstance)
                     logging.debug(movesTuple[1])
-                    boardDict[boardInstance[0]].append(movesTuple[1])
+                    self.boardDict[boardInstance[0]].append(movesTuple[1])
                 else:
-                    boardDict[boardInstance[0]] = [movesTuple[1]]
+                    self.boardDict[boardInstance[0]] = [movesTuple[1]]
         elif winner == 'X':
-            for i in range(1, len(moveList), 2):
-                movesTuple = moveList[i]
+            for i in range(0, len(self.move_record)):
+                movesTuple = self.move_record[i]
                 logging.debug(movesTuple)
-                boardInstance = canonical_board(movesTuple[0][0])
+                boardInstance = canonical_board(movesTuple[0])
                 canonBoard = canonical_board(board)
                 if boardInstance[0] != canonBoard[0]:
                     logging.debug(boardInstance)
                     logging.debug(movesTuple[1])
-                    boardDict[boardInstance[0]].remove(movesTuple[1])
+                    self.boardDict[boardInstance[0]].remove(movesTuple[1])
                 else:
-                    boardDict[boardInstance[0]] = [movesTuple[1]]
+                    self.boardDict[boardInstance[0]] = [movesTuple[1]]
+        logging.info(self.boardDict)
         self.save_to_file('move_dict.dat')
-        return boardDict
