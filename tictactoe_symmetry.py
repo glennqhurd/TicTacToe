@@ -33,7 +33,7 @@ def canonical_board(boardString):
     symmetric = symmetric_boards(boardString)
     canonical = min(symmetric)
     board_index = symmetric.index(canonical)
-    return (canonical, board_index)
+    return canonical, board_index
 
 
 def is_canonical(x):
