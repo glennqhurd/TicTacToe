@@ -49,7 +49,7 @@ class roboplayer:
 
     def adjust(self, board):
         winner = boardutils.winner(board)
-        logging.info(winner)
+        logging.debug(winner)
         if winner == 'O':
             for i in range(0, len(self.move_record)):
                 movesTuple = self.move_record[i]
@@ -66,13 +66,15 @@ class roboplayer:
             for i in range(0, len(self.move_record)):
                 movesTuple = self.move_record[i]
                 logging.debug(movesTuple)
-                boardInstance = canonical_board(movesTuple[0])
+                boardInstance = canonical_board(movesTuple[0])[0]
                 canonBoard = canonical_board(board)
                 if boardInstance[0] != canonBoard[0]:
-                    logging.debug(boardInstance)
-                    logging.debug(movesTuple[1])
-                    self.boardDict[boardInstance[0]].remove(movesTuple[1])
+                    logging.info(boardInstance)
+                    logging.info(movesTuple[1])
+                    logging.info(self.boardDict[boardInstance])
+                    assert boardInstance == movesTuple[0]
+                    self.boardDict[boardInstance].remove(movesTuple[1])
                 else:
-                    self.boardDict[boardInstance[0]] = [movesTuple[1]]
+                    self.boardDict[boardInstance] = [movesTuple[1]]
         logging.info(self.boardDict)
         self.save_to_file('move_dict.dat')
