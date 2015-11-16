@@ -71,8 +71,8 @@ class roboplayer:
                 logging.debug(movesTuple)
                 boardInstance = movesTuple[0]
                 if boardInstance != self.move_record[move_length - 1][0]:
-                    logging.info(boardInstance)
-                    logging.info(movesTuple[1])
+                    logging.info('boardInstance: %s', boardInstance)
+                    logging.info('movesTuple[1]: %d', movesTuple[1])
                     logging.info(self.boardDict[boardInstance])
                     assert boardInstance == movesTuple[0]
                     if self.boardDict[boardInstance] > 1:
