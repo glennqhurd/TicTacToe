@@ -48,6 +48,7 @@ class tictactoeUI:
         self.game.reset_board()
         self.in_progress = False  # Unfreeze the buttons until click is called.
         self.X_turn = True
+        self.robo.reset_record()
         self.radiobutton_player.config(state='active')
         self.radiobutton_computer.config(state='active')
         self.player_label.config(text='Player 1 turn (X)')

@@ -37,7 +37,8 @@ def canonical_board(boardString):
 
 
 def is_canonical(x):
-    return x == canonical_board(x)
+    board, symmetry = canonical_board(x)
+    return x == board
 
 
 def is_legal(x):

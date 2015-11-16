@@ -30,5 +30,9 @@ class testSymmetry(unittest.TestCase):
         self.assertEqual(6, get_symm_index(0, 1))
         self.assertEqual(7, get_symm_index(1, 2))
 
+    def test_is_canonical(self):
+        board, symmetry = canonical_board('X        ')
+        assert is_canonical(board)
+
 if __name__ == '__main__':
     unittest.main()

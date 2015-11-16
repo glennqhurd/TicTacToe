@@ -50,9 +50,11 @@ class roboplayer:
     def adjust(self, board):
         winner = boardutils.winner(board)
         logging.debug(winner)
+        logging.info(self.move_record)
         move_length = len(self.move_record)
         if winner == 'O':
             for i in range(0, move_length):
+                self.record_is_legal()
                 movesTuple = self.move_record[i]
                 logging.debug(movesTuple)
                 boardInstance = movesTuple[0]
@@ -63,7 +65,8 @@ class roboplayer:
                 else:
                     self.boardDict[boardInstance[0]] = [movesTuple[1]]
         elif winner == 'X':
-            for i in range(0, len(self.move_record)):
+            for i in range(len(self.move_record)):
+                self.record_is_legal()
                 movesTuple = self.move_record[i]
                 logging.debug(movesTuple)
                 boardInstance = movesTuple[0]
@@ -72,8 +75,19 @@ class roboplayer:
                     logging.info(movesTuple[1])
                     logging.info(self.boardDict[boardInstance])
                     assert boardInstance == movesTuple[0]
-                    self.boardDict[boardInstance].remove(movesTuple[1])
+                    if self.boardDict[boardInstance] > 1:
+                        self.boardDict[boardInstance].remove(movesTuple[1])
                 else:
                     self.boardDict[boardInstance] = [movesTuple[1]]
         logging.info(self.boardDict)
         self.save_to_file('move_dict.dat')
+
+    def record_is_legal(self):
+        for i in range(len(self.move_record)):
+            board = self.move_record[i][0]
+            move = self.move_record[i][1]
+            assert is_canonical(board)
+            assert board[move] == ' '
+
+    def reset_record(self):
+        self.move_record = []
