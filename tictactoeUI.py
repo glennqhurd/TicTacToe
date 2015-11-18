@@ -69,7 +69,7 @@ class tictactoeUI:
             self.opponent_move_event.wait()
             if boardutils.to_move(self.game.board) == 'O':
                 logging.debug('Entering if statement')
-                computer_move = self.robo.get_move(self.game.board)
+                computer_move = self.robo.o_move(self.game.board)
                 self.game.board = boardutils.set_move(self.game.board, computer_move, 'O')
                 self.drawO(computer_move)
                 self.opponent_move_event.clear()

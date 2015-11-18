@@ -21,7 +21,6 @@ IDENTITY, ROT90, ROT180, ROT270, VERTICAL, HORIZONTAL, LEFT_DIAGONAL, RIGHT_DIAG
 
 # Applies symmetry 0-7 to the board_string supplied
 def apply_symmetry(board_string, symmetry):
-    logging.debug(board_string)
     return ''.join([board_string[SYMMETRY_TUPLE[symmetry][i]] for i in range(len(board_string))])
 
 

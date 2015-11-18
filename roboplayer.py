@@ -29,7 +29,12 @@ class roboplayer:
         if not canon_board in self.boardDict:
             self.boardDict[canon_board] = 4 * board_list
 
-    def get_move(self, board_string):
+    def x_move(self, board_string):
+        blanks = boardutils.blank_list(board_string)
+        randomIndex = random.randint(0, len(blanks) - 1)
+        return boardutils.set_move(board_string, randomIndex, 'X')
+
+    def o_move(self, board_string):
         # time.sleep(2)
         self._empty(board_string)
         canon_board, symmetry = canonical_board(board_string)
@@ -39,28 +44,20 @@ class roboplayer:
             randomIndex = random.randint(0, len(moveList) - 1)
         else:
             randomIndex = 0
-        logging.debug('Canonical_board[0]:\n %s', boardutils.readable_board_string(canon_board))
-        logging.debug('random index of moveList is: %d', moveList[randomIndex])
-        logging.debug('Symmetry used = %d', symmetry)
         symm_move = get_symm_index(moveList[randomIndex], symmetry)
         self.move_record.append((canon_board, moveList[randomIndex]))
-        logging.debug('Symmetry move is: %d', symm_move)
         return symm_move
 
     def adjust(self, board):
         winner = boardutils.winner(board)
-        logging.debug(winner)
         logging.info(self.move_record)
         move_length = len(self.move_record)
         if winner == 'O':
             for i in range(0, move_length):
                 self.record_is_legal()
                 movesTuple = self.move_record[i]
-                logging.debug(movesTuple)
                 boardInstance = movesTuple[0]
                 if boardInstance != self.move_record[move_length - 1][0]:
-                    logging.debug(boardInstance)
-                    logging.debug(movesTuple[1])
                     self.boardDict[boardInstance].append(movesTuple[1])
                 else:
                     self.boardDict[boardInstance[0]] = [movesTuple[1]]
@@ -68,13 +65,12 @@ class roboplayer:
             for i in range(len(self.move_record)):
                 self.record_is_legal()
                 movesTuple = self.move_record[i]
-                logging.debug(movesTuple)
                 boardInstance = movesTuple[0]
                 logging.info('boardInstance: %s', boardInstance)
                 logging.info('movesTuple[1]: %d', movesTuple[1])
                 logging.info(self.boardDict[boardInstance])
                 assert boardInstance == movesTuple[0]
-                if self.boardDict[boardInstance] > 1:
+                if len(self.boardDict[boardInstance]) > 1:
                     self.boardDict[boardInstance].remove(movesTuple[1])
 
         logging.info(self.boardDict)
