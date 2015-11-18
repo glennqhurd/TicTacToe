@@ -35,11 +35,15 @@ if __name__ == '__main__':
     oTally = 0
     catTally = 0
     robo = roboplayer.roboplayer()
-    for i in range(1):
+    for i in range(20):
         game = smarttactoe()
         while not boardutils.winner(game.board) and boardutils.winner(game.board) != 'Cat':
-            nextMove = game.robo.o_move(game.board)
-            game.board = boardutils.set_move(game.board, nextMove, boardutils.to_move(game.board))
+            if boardutils.to_move(game.board) == 'X':
+                nextMove = robo.x_move(game.board)
+                game.board = boardutils.set_move(game.board, nextMove, boardutils.to_move(game.board))
+            else:
+                nextMove = robo.o_move(game.board)
+                game.board = boardutils.set_move(game.board, nextMove, boardutils.to_move(game.board))
             print boardutils.readable_board_string(game.board)
         winnerString = boardutils.winner(game.board)
         robo.adjust(game.board)

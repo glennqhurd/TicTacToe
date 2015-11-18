@@ -30,9 +30,11 @@ class roboplayer:
             self.boardDict[canon_board] = 4 * board_list
 
     def x_move(self, board_string):
-        blanks = boardutils.blank_list(board_string)
+        canon_board, symmetry = canonical_board(board_string)
+        blanks = boardutils.blank_list(canon_board)
         randomIndex = random.randint(0, len(blanks) - 1)
-        return boardutils.set_move(board_string, randomIndex, 'X')
+        symm_move = get_symm_index(blanks[randomIndex], symmetry)
+        return symm_move
 
     def o_move(self, board_string):
         # time.sleep(2)
@@ -50,7 +52,6 @@ class roboplayer:
 
     def adjust(self, board):
         winner = boardutils.winner(board)
-        logging.info(self.move_record)
         move_length = len(self.move_record)
         if winner == 'O':
             for i in range(0, move_length):
@@ -66,14 +67,9 @@ class roboplayer:
                 self.record_is_legal()
                 movesTuple = self.move_record[i]
                 boardInstance = movesTuple[0]
-                logging.info('boardInstance: %s', boardInstance)
-                logging.info('movesTuple[1]: %d', movesTuple[1])
-                logging.info(self.boardDict[boardInstance])
                 assert boardInstance == movesTuple[0]
                 if len(self.boardDict[boardInstance]) > 1:
                     self.boardDict[boardInstance].remove(movesTuple[1])
-
-        logging.info(self.boardDict)
         self.save_to_file('move_dict.dat')
 
     def record_is_legal(self):
