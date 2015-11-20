@@ -59,7 +59,7 @@ class roboplayer:
                 movesTuple = self.move_record[i]
                 boardInstance = movesTuple[0]
                 if boardInstance != self.move_record[move_length - 1][0]:
-                    self.boardDict[boardInstance].append(movesTuple[1])
+                    self.boardDict[boardInstance].extend((movesTuple[1], movesTuple[1], movesTuple[1]))
                 else:
                     self.boardDict[boardInstance[0]] = [movesTuple[1]]
         elif winner == 'X':
@@ -70,6 +70,16 @@ class roboplayer:
                 assert boardInstance == movesTuple[0]
                 if len(self.boardDict[boardInstance]) > 1:
                     self.boardDict[boardInstance].remove(movesTuple[1])
+        elif winner == 'Cat':
+            for i in range(0, move_length):
+                self.record_is_legal()
+                movesTuple = self.move_record[i]
+                boardInstance = movesTuple[0]
+                if boardInstance != self.move_record[move_length - 1][0]:
+                    self.boardDict[boardInstance].append(movesTuple[1])
+                else:
+                    self.boardDict[boardInstance[0]] = [movesTuple[1]]
+        self.move_record = []
         self.save_to_file('move_dict.dat')
 
     def record_is_legal(self):

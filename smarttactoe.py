@@ -35,7 +35,7 @@ if __name__ == '__main__':
     oTally = 0
     catTally = 0
     robo = roboplayer.roboplayer()
-    for i in range(20):
+    for i in range(5001):
         game = smarttactoe()
         while not boardutils.winner(game.board) and boardutils.winner(game.board) != 'Cat':
             if boardutils.to_move(game.board) == 'X':
@@ -53,8 +53,8 @@ if __name__ == '__main__':
             oTally += 1
         else:
             catTally += 1
-        if i % 50 == 0:
+        if i % 25 == 0:
             logging.info('X: %d, O: %d, Cat: %d', xTally, oTally, catTally)
-            xTally = 0
-            oTally = 0
-            catTally = 0
+            # xTally = 0
+            # oTally = 0
+            # catTally = 0
