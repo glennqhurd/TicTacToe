@@ -60,7 +60,7 @@ class roboplayer:
                 if board_instance != self.move_record[move_length - 1][0]:
                     self.boardDict[board_instance].extend((move, move, move))
                 else:
-                    self.boardDict[board_instance[0]] = [move]
+                    self.boardDict[board_instance] = [move]
         elif winner == 'X':
             for i in range(len(self.move_record)):
                 self.record_is_legal()
@@ -74,7 +74,7 @@ class roboplayer:
                 if board_instance != self.move_record[move_length - 1][0]:
                     self.boardDict[board_instance].append(move)
                 else:
-                    self.boardDict[board_instance[0]] = [move]
+                    self.boardDict[board_instance] = [move]
         self.move_record = []
         self.save_to_file('move_dict.dat')
 

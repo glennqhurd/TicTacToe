@@ -5,7 +5,7 @@ WINNER_TUPLE = ((0, 1, 2), (0, 3, 6), (0, 4, 8), (1, 4, 7),
                 (3, 4, 5), (2, 5, 8), (6, 7, 8), (2, 4, 6))
 
 
-def blank_list(boardString):
+def blank_list(board_string):
     """
     Given a board string return a list of the indices that are blank.
 
@@ -15,11 +15,11 @@ def blank_list(boardString):
     Returns:
       List of indices (ints).
     """
-    emptyList = [i for i in range(len(boardString)) if boardString[i] == ' ']
-    return emptyList
+    empty_list = [i for i in range(len(board_string)) if board_string[i] == ' ']
+    return empty_list
 
 
-def winner(boardString):
+def winner(board_string):
     """
     Given a board string determine a winner.
 
@@ -29,18 +29,18 @@ def winner(boardString):
     Returns:
       'X', 'O' 'Cat' or None.
     """
-    assert len(boardString) == 9
+    assert len(board_string) == 9
     for tuple in WINNER_TUPLE:
-        if boardString[tuple[0]] == boardString[tuple[1]] and boardString[tuple[1]] == boardString[tuple[2]]:
-            if boardString[tuple[0]] != ' ':
-                return boardString[tuple[0]]
-    for i in range(len(boardString)):
-        if boardString[i] == ' ':
+        if board_string[tuple[0]] == board_string[tuple[1]] and board_string[tuple[1]] == board_string[tuple[2]]:
+            if board_string[tuple[0]] != ' ':
+                return board_string[tuple[0]]
+    for i in range(len(board_string)):
+        if board_string[i] == ' ':
             return None
     return 'Cat'
 
 
-def set_move(boardString, position, player):
+def set_move(board_string, position, player):
     """
     Return a new board string after making the indicated move.
 
@@ -52,19 +52,19 @@ def set_move(boardString, position, player):
     Returns:
       New board after move.
     """
-    boardList = list(boardString)
-    boardList[position] = player
-    return ''.join(boardList)
+    board_list = list(board_string)
+    board_list[position] = player
+    return ''.join(board_list)
 
 
-def is_valid_move(boardString, position):
-    if boardString[position] == ' ':
+def is_valid_move(board_string, position):
+    if board_string[position] == ' ':
         return True
     else:
         return False
 
 
-def readable_board_string(boardString):
+def readable_board_string(board_string):
     """
     Print a board using ascii characters.
     For testing: Returns a string
@@ -79,7 +79,7 @@ def readable_board_string(boardString):
             '-----------\n'
             ' %s | %s | %s\n'
             '-----------\n'
-            ' %s | %s | %s\n\n' % tuple(boardString))
+            ' %s | %s | %s\n\n' % tuple(board_string))
 
 
 def empty_board():
@@ -92,7 +92,7 @@ def empty_board():
     return '         '
 
 
-def board_list(boardString):
+def board_list(board_string):
     """
     Represent a board string as a list.
 
@@ -102,10 +102,10 @@ def board_list(boardString):
     Returns:
       List of moves (characters, 'X', "O', ' ').
     """
-    return list(boardString)
+    return list(board_string)
 
 
-def board_string(boardList):
+def board_string(board_list):
     """
     Represent a board list as a string.
 
@@ -115,10 +115,10 @@ def board_string(boardList):
     Returns:
       Nine element string.
     """
-    return ''.join(boardList)
+    return ''.join(board_list)
 
 
-def to_move(boardString):
+def to_move(board_string):
     """
     Determine whose move it is from a board string.  The answer will be 'X' if
     there are an off number of blanks and 'O' otherwise.
@@ -131,7 +131,7 @@ def to_move(boardString):
     """
     # HINT: I just found out about a Python function mystring.count(' ') (or
     # any other character).
-    return ('O', 'X')[boardString.count(' ') % 2]
+    return ('O', 'X')[board_string.count(' ') % 2]
 
 
 if __name__ == '__main__':

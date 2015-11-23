@@ -10,9 +10,9 @@ PLAYER_MODE = 1
 COMPUTER_MODE = 2
 
 
-class tictactoeUI:
+class TicTacToeUI:
     def __init__(self):
-        self.game = smarttactoe()
+        self.game = SmartTacToe()
         self.robo = roboplayer.roboplayer()
         self.in_progress = False
         self.X_turn = False
@@ -171,5 +171,5 @@ class tictactoeUI:
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    t = tictactoeUI()
+    t = TicTacToeUI()
     t.create_window()

@@ -8,13 +8,12 @@ __author__ = 'Lyman and Glenn Hurd'
 # For reference on MENACE (The matchbox "computer" this is designed after) check out this website:
 # http://shorttermmemoryloss.com/menace/
 
-class smarttactoe:
+class SmartTacToe:
     FILENAME = 'move_dictionary.dat'
 
     def __init__(self):
         self.robo = roboplayer.roboplayer()
         self.reset_board()
-        self.boardDict = {}
 
     # Returns the board object
     def board(self):
@@ -27,7 +26,6 @@ class smarttactoe:
     def reset_board(self):
         self.moves = {}
         self.board = boardutils.empty_board()
-        self.matchBoxesAdjusted = False
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
@@ -36,7 +34,7 @@ if __name__ == '__main__':
     catTally = 0
     robo = roboplayer.roboplayer()
     for i in range(5001):
-        game = smarttactoe()
+        game = SmartTacToe()
         while not boardutils.winner(game.board) and boardutils.winner(game.board) != 'Cat':
             if boardutils.to_move(game.board) == 'X':
                 nextMove = robo.x_move(game.board)
