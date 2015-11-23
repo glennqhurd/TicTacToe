@@ -49,6 +49,7 @@ if __name__ == '__main__':
         robo.adjust(game.board)
         if winnerString == 'X':
             xTally += 1
+            break
         elif winnerString == 'O':
             oTally += 1
         else:

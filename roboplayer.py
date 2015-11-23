@@ -56,36 +56,31 @@ class roboplayer:
         if winner == 'O':
             for i in range(0, move_length):
                 self.record_is_legal()
-                movesTuple = self.move_record[i]
-                boardInstance = movesTuple[0]
-                if boardInstance != self.move_record[move_length - 1][0]:
-                    self.boardDict[boardInstance].extend((movesTuple[1], movesTuple[1], movesTuple[1]))
+                board_instance, move = self.move_record[i]
+                if board_instance != self.move_record[move_length - 1][0]:
+                    self.boardDict[board_instance].extend((move, move, move))
                 else:
-                    self.boardDict[boardInstance[0]] = [movesTuple[1]]
+                    self.boardDict[board_instance[0]] = [move]
         elif winner == 'X':
             for i in range(len(self.move_record)):
                 self.record_is_legal()
-                movesTuple = self.move_record[i]
-                boardInstance = movesTuple[0]
-                assert boardInstance == movesTuple[0]
-                if len(self.boardDict[boardInstance]) > 1:
-                    self.boardDict[boardInstance].remove(movesTuple[1])
+                board_instance, move = self.move_record[i]
+                if len(self.boardDict[board_instance]) > 1:
+                    self.boardDict[board_instance].remove(move)
         elif winner == 'Cat':
             for i in range(0, move_length):
                 self.record_is_legal()
-                movesTuple = self.move_record[i]
-                boardInstance = movesTuple[0]
-                if boardInstance != self.move_record[move_length - 1][0]:
-                    self.boardDict[boardInstance].append(movesTuple[1])
+                board_instance, move = self.move_record[i]
+                if board_instance != self.move_record[move_length - 1][0]:
+                    self.boardDict[board_instance].append(move)
                 else:
-                    self.boardDict[boardInstance[0]] = [movesTuple[1]]
+                    self.boardDict[board_instance[0]] = [move]
         self.move_record = []
         self.save_to_file('move_dict.dat')
 
     def record_is_legal(self):
         for i in range(len(self.move_record)):
-            board = self.move_record[i][0]
-            move = self.move_record[i][1]
+            board, move = self.move_record[i]
             assert is_canonical(board)
             assert board[move] == ' '
 
