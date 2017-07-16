@@ -37,7 +37,7 @@ def winner(board_string):
     for i in range(len(board_string)):
         if board_string[i] == ' ':
             return None
-    return 'Cat'
+    return 'Cat\'s Game'
 
 
 def set_move(board_string, position, player):
